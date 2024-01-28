@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="claro50">#EFFCFB</color>
+    <color name="claro100">#D7F6F4</color>
+    <color name="claro200">#B3EEED</color>
+    <color name="claro300">#97E7E7</color>
+    <color name="claro400">#43cbcd</color>
+    <color name="claro500">#27AEB3</color>
+    <color name="claro700">#248D96</color>
+    <color name="claro800">#23727B</color>
+    <color name="claro900">#255D65</color>
+    <color name="claro950">#224e57</color>
 </resources>
