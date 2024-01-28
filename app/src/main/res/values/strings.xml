@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">QuizMaster</string>
+    <string name="hint_enter_name">Ingrese su nombre</string>
+    <string name="button_enter">Entrar</string>
 </resources>
