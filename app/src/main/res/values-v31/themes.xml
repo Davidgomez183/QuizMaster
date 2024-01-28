@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Base.Theme.QuizMaster" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowSplashScreenBackground">@color/claro100</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/iconoremovebgpreview</item>
+        <item name="android:windowSplashScreenAnimationDuration">4000</item>
 
+    </style>
 </resources>
