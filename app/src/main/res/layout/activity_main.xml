@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pruevafondo"
+    android:background="@color/claro400"
     tools:context=".MainActivity">
 
     <EditText
@@ -12,7 +12,9 @@
         android:layout_width="356dp"
         android:layout_height="66dp"
         android:layout_marginTop="76dp"
-        android:hint="Ingrese su nombre"
+        android:backgroundTint="@color/claro900"
+        android:singleLine="false"
+        android:hint="Ingrese su nombre:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +27,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/claro900"
+        android:background="@color/claro800"
         android:text="Entrar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,5 +60,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName"
         app:srcCompat="@drawable/iconoremovebgpreview" />
+
+    <EditText
+        android:id="@+id/editTextText"
+        android:layout_width="355dp"
+        android:layout_height="71dp"
+        android:backgroundTint="@color/claro900"
+        android:drawableTint="#3F51B5"
+        android:ems="10"
+        android:hint="Entrar numero de preguntas:"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/imageView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextName"
+        app:layout_constraintVertical_bias="0.449" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
