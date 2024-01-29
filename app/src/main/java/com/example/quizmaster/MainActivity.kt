@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
             // Mostrar la información en un Toast
             val mensaje = "Nombre: $nombre\nNúmero de Preguntas: $numeroPreguntas"
             Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
+            // Pasar información al segundo fragmento
+
         }
     }
 
