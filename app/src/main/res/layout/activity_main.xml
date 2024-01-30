@@ -52,11 +52,11 @@
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="141dp"
-        android:layout_height="136dp"
-        android:layout_marginTop="140dp"
+        android:layout_width="281dp"
+        android:layout_height="266dp"
+        android:layout_marginTop="112dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName"
         app:srcCompat="@drawable/iconoremovebgpreview" />
