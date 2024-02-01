@@ -4,21 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/claro400"
+    android:background="@color/claro900"
     tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <EditText
         android:id="@+id/editTextName"
-        android:layout_width="356dp"
+        android:layout_width="349dp"
         android:layout_height="66dp"
-        android:layout_marginTop="76dp"
-        android:backgroundTint="@color/claro900"
-        android:singleLine="false"
+        android:layout_marginTop="116dp"
+        android:backgroundTint="@color/claro100"
         android:hint="Entra el teu nom i cognom:"
+        android:singleLine="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/buttonEnter"
@@ -27,53 +31,44 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/claro800"
+        android:background="@color/claro950"
         android:text="Som-hi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName"
-        app:layout_constraintVertical_bias="0.771" />
+        app:layout_constraintVertical_bias="0.731" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="85dp"
         android:fontFamily="sans-serif-condensed"
         android:text="QuizMaster"
-        android:textColor="@color/claro950"
+        android:textColor="@color/claro100"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/editTextName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="281dp"
-        android:layout_height="266dp"
-        android:layout_marginTop="112dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName"
-        app:srcCompat="@drawable/iconoremovebgpreview" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.722" />
 
     <EditText
         android:id="@+id/editTextText"
-        android:layout_width="355dp"
-        android:layout_height="71dp"
-        android:backgroundTint="@color/claro900"
-        android:drawableTint="#3F51B5"
+        android:layout_width="347dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="124dp"
+        android:backgroundTint="@color/claro100"
+        android:drawableTint="@color/claro50"
         android:ems="10"
         android:hint="Entra el numero de preguntes:"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/imageView4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName"
-        app:layout_constraintVertical_bias="0.449" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
