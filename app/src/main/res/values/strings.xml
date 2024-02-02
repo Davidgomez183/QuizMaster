@@ -2,4 +2,7 @@
     <string name="app_name">QuizMaster</string>
     <string name="hint_enter_name">Ingrese su nombre</string>
     <string name="button_enter">Entrar</string>
+    <string name="som_hi">Som-hi</string>
+    <string name="entra_el_teu_nom_i_cognom">Entra el teu nom i cognom:</string>
+    <string name="entra_el_numero_de_preguntes">Entra el numero de preguntes:</string>
 </resources>
