@@ -1,6 +1,5 @@
 package com.example.quizmaster
 
-import SecondFragment
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -46,24 +45,7 @@ class MainActivity : AppCompatActivity() {
             val mensaje = "Nombre: $nombre\nNúmero de Preguntas: $numeroPreguntas"
             Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
 
-            // Resto del código para pasar información al segundo fragmento
-            val segundoFragmento = SecondFragment()
-            val bundle = Bundle()
-            bundle.putString("nombre", nombre)
-            bundle.putString("numeroPreguntas", numeroPreguntas)
-            segundoFragmento.arguments = bundle
 
-            // Ocultar el primer fragmento
-            val primerFragmento = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
-            if (primerFragmento != null) {
-                supportFragmentManager.beginTransaction().hide(primerFragmento).commit()
-            }
-
-            // Realizar la transacción al segundo fragmento
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentContainer, segundoFragmento)
-            transaction.addToBackStack(null)
-            transaction.commit()
         }
     }
 }
