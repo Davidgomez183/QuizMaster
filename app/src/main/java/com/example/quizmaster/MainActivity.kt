@@ -53,6 +53,13 @@ class MainActivity : AppCompatActivity() {
             bundle.putString("numeroPreguntas", numeroPreguntas)
             segundoFragmento.arguments = bundle
 
+            // Ocultar el primer fragmento
+            val primerFragmento = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+            if (primerFragmento != null) {
+                supportFragmentManager.beginTransaction().hide(primerFragmento).commit()
+            }
+
+            // Realizar la transacción al segundo fragmento
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragmentContainer, segundoFragmento)
             transaction.addToBackStack(null)
