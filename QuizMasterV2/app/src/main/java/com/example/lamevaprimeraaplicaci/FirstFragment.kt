@@ -85,7 +85,6 @@ class FirstFragment : Fragment() {
             val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount, nombreText)
             findNavController().navigate(action)
 
-
         }
 
         // troba el toast_button pel seu ID
