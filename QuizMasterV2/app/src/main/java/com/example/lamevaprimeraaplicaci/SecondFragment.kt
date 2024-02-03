@@ -5,12 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
-import androidx.navigation.fragment.navArgs
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -45,11 +42,13 @@ class SecondFragment : Fragment() {
 
         val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
+        val nombreValor = args.nombre
+
         val countText = getString(R.string.here_is_a_random_number_between_0_and_d, count)
-        // Muestra el valor del argumento Countnumber en el TextView textView3
         view.findViewById<TextView>(R.id.textView3).text = countText
-        // Muestra el valor del argumento Countnumber en el TextView
-        view.findViewById<TextView>(R.id.textview_random).text = countText
+
+        val nombreText = getString(R.string.here_is_the_name_s, nombreValor)
+        view.findViewById<TextView>(R.id.textview_valorNombre).text = nombreText
 
     }
 

@@ -30,5 +30,8 @@
         <argument
             android:name="Countnumber"
             app:argType="integer" />
+        <argument
+            android:name="nombre"
+            app:argType="string" />
     </fragment>
 </navigation>

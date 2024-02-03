@@ -7,5 +7,5 @@ la APP de manera predeterminada  si te posicionas encima del color hexadecimal v
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="screenBackground">#88FFEE58</color>
-    <color name="screenBackground2">#26C6DA</color>
+    <color name="screenBackground2">#A6E2EA</color>
 </resources>

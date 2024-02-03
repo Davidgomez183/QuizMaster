@@ -57,6 +57,8 @@ class FirstFragment : Fragment() {
 
         //Convert value to a number and increment el numero
         var count = countString.toInt()
+        count = 1;
+
         count--
 
         //Display the new value in the text view
@@ -70,8 +72,17 @@ class FirstFragment : Fragment() {
 
         view.findViewById<Button>(R.id.Random_bt).setOnClickListener {
             val showCountTextView = view.findViewById<TextView>(R.id.textview_first0)
-            val currentCount = showCountTextView.text.toString().toInt()
-            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount)
+            val nombreValor = view.findViewById<TextView>(R.id.nombreValor)
+
+            // Obtén el texto de los TextViews
+            val countText = showCountTextView.text.toString()
+            val nombreText = nombreValor.text.toString()
+
+            // Convierte el texto del contador a un valor numérico
+            val currentCount = if (countText.isNotEmpty()) countText.toInt() else 0
+
+            // Crea la acción de navegación con los argumentos
+            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount, nombreText)
             findNavController().navigate(action)
 
 
