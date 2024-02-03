@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
@@ -33,7 +34,6 @@ class SecondFragment : Fragment() {
 
     }
 
-
     val args: SecondFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,22 +50,33 @@ class SecondFragment : Fragment() {
         val nombreText = getString(R.string.here_is_the_name_s, nombreValor)
         view.findViewById<TextView>(R.id.textview_valorNombre).text = nombreText
 
+        showQuestions()
+
     }
 
+    private fun showQuestions() {
+        val numberOfQuestionsToShow =  1
+        val questionsToShow = QuestionRepository.allQuestions.toList().shuffled().take(numberOfQuestionsToShow)
 
-        // Obtén el valor del argumento "Countnumber" pasado desde FirstFragment
-        //val args = SecondFragmentArgs.fromBundle(requireArguments())
-        //val countNumber = args.Countnumber
+        if (questionsToShow.isNotEmpty()) {
+            showQuestion(questionsToShow.first())
+        }
+    }
 
-        // Muestra el valor en la vista
-        //val textView = view.findViewById<TextView>(R.id.random_heading)
-        //textView.text = "Here is a random nomber between : $countNumber"
+    private fun showQuestion(question: Question) {
+        //Mostrar Pregunta questionTextView
+        val questionTextView = view?.findViewById<TextView>(R.id.PreguntaText)
+        questionTextView?.text = question.questionText
 
+        val option1TextView = view?.findViewById<RadioButton>(R.id.opcion1RadioButton)
+        option1TextView?.text = "A) ${question.options[0]}"
 
+        val option2TextView = view?.findViewById<RadioButton>(R.id.opcion2RadioButton)
+        option2TextView?.text = "B) ${question.options[1]}"
 
-
-
-
+        val option3TextView = view?.findViewById<RadioButton>(R.id.opcion3RadioButton)
+        option3TextView?.text = "C) ${question.options[2]}"
+    }
 
 
     override fun onDestroyView() {
