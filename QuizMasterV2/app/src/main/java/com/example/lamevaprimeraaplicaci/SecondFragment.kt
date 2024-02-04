@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
@@ -83,13 +84,24 @@ class SecondFragment : Fragment() {
 
         val option3TextView = view?.findViewById<RadioButton>(R.id.opcion3RadioButton)
         option3TextView?.text = "C) ${question.options[2]}"
+
+        // Mostrar la imagen
+        val questionImage = view?.findViewById<ImageView>(R.id.questionImageView)
+        questionImage?.setImageResource(question.imageResourceId)
     }
 
     private fun nextQuestion() {
-        questionIndex.incrementAndGet()  // Incrementa el índice al siguiente
-        showQuestions()  // Muestra la siguiente pregunta
+        val newIndex = questionIndex.incrementAndGet()  // Incrementa el índice al siguiente
+        if (newIndex < QuestionRepository.allQuestions.size) {
+            showQuestions()  // Muestra la siguiente pregunta
+        } else {
+            // Aquí puedes manejar el caso cuando se hayan mostrado todas las preguntas
+            // Puedes reiniciar el índice o realizar otra acción según tu lógica
+            // Por ejemplo:
+            questionIndex.set(0)
+            showQuestions()  // Muestra la primera pregunta de nuevo
+        }
     }
-
 
 
 
