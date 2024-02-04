@@ -43,12 +43,12 @@ class SecondFragment : Fragment() {
         val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
         val nombreValor = args.nombre
-
+        val score = 0
         val countText = getString(R.string.here_is_a_random_number_between_0_and_d, count)
         view.findViewById<TextView>(R.id.textView3).text = countText
 
         val nombreText = getString(R.string.here_is_the_name_s, nombreValor)
-        view.findViewById<TextView>(R.id.textview_valorNombre).text = nombreText
+        view.findViewById<TextView>(R.id.textView3).text = nombreText
 
         showQuestions()
 

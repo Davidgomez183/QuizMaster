@@ -5,7 +5,7 @@
     <string name="first_fragment_label">QuizMaster</string>
     <string name="second_fragment_label">QuizMaster</string>
     <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="previous">Comprovar</string>
 
     <string name="lorem_ipsum">
 
@@ -22,6 +22,6 @@
     <string name="random_bt">Jugar!</string>
     <string name="here_is_a_random_number_between_0_and_d">Numero de preguntes %d</string>
     <string name="r">R</string>
-    <string name="here_is_the_name_s">Here is the name: %s</string>
+    <string name="here_is_the_name_s">Bievenido al Juego %s</string>
     <string name="textoCentro0">0</string>
 </resources>

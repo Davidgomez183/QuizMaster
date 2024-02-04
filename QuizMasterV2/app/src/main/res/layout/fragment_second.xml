@@ -2,31 +2,32 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:context=".SecondFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/okk"
         android:padding="16dp">
 
         <Button
-            android:id="@+id/Previous_bt"
+            android:id="@+id/comprobar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="158dp"
+            android:layout_marginStart="136dp"
             android:layout_marginTop="400dp"
-            android:layout_marginEnd="133dp"
+            android:layout_marginEnd="141dp"
+            android:layout_marginBottom="16dp"
             android:background="@color/material_dynamic_neutral_variant60"
             android:text="@string/previous"
             android:textColor="#212121"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textview_valorNombre" />
+            app:layout_constraintTop_toBottomOf="@+id/opcionesRadioGroup" />
 
         <TextView
             android:id="@+id/textView3"
@@ -35,7 +36,7 @@
             android:layout_marginStart="62dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="54dp"
-            android:text="@string/here_is_a_random_number_between_0_and_d"
+            android:text="@string/here_is_the_name_s"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -44,74 +45,69 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textview_valorNombre"
-            android:layout_width="343dp"
-            android:layout_height="121dp"
-            android:layout_marginTop="44dp"
-            android:layout_marginEnd="202dp"
-            android:fontFamily="sans-serif"
-            android:text="@string/here_is_the_name_s"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <!-- Pregunta -->
-
-        <!-- Opción 1 -->
-
-        <!-- Opción 2 -->
-
-        <!-- Opción 3 -->
         <TextView
             android:id="@+id/PreguntaText"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:background="#C591D2"
             android:text=""
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/opcion1RadioButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textview_valorNombre" />
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <RadioButton
-            android:id="@+id/opcion1RadioButton"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/opcionesRadioGroup"
+            android:layout_width="384dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="134dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="213dp"
-            android:text=""
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="11dp"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/PreguntaText" />
+            app:layout_constraintTop_toBottomOf="@+id/PreguntaText">
 
-        <RadioButton
-            android:id="@+id/opcion2RadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="134dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="213dp"
-            android:text=""
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/opcion3RadioButton" />
+            <RadioButton
+                android:id="@+id/opcion1RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="213dp"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PreguntaText" />
 
-        <RadioButton
-            android:id="@+id/opcion3RadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="134dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="213dp"
-            android:text=""
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/opcion1RadioButton" />
+            <RadioButton
+                android:id="@+id/opcion2RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="213dp"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/opcion3RadioButton" />
 
+            <RadioButton
+                android:id="@+id/opcion3RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="213dp"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/opcion1RadioButton" />
+
+        </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
