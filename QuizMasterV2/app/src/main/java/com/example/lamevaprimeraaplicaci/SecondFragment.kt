@@ -5,10 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -21,7 +23,7 @@ class SecondFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-
+    private val questionIndex = AtomicInteger(0)  // Inicializa el índice en 0
 
 
     override fun onCreateView(
@@ -38,7 +40,7 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
 
         val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
@@ -52,10 +54,15 @@ class SecondFragment : Fragment() {
 
         showQuestions()
 
+        val nextButton = view?.findViewById<Button>(R.id.siguienteButton)
+        nextButton?.setOnClickListener {
+            nextQuestion()
+        }
+
     }
 
     private fun showQuestions() {
-        val numberOfQuestionsToShow =  1
+        val numberOfQuestionsToShow = 1
         val questionsToShow = QuestionRepository.allQuestions.toList().shuffled().take(numberOfQuestionsToShow)
 
         if (questionsToShow.isNotEmpty()) {
@@ -64,7 +71,7 @@ class SecondFragment : Fragment() {
     }
 
     private fun showQuestion(question: Question) {
-        //Mostrar Pregunta questionTextView
+        // Mostrar Pregunta questionTextView
         val questionTextView = view?.findViewById<TextView>(R.id.PreguntaText)
         questionTextView?.text = question.questionText
 
@@ -77,6 +84,13 @@ class SecondFragment : Fragment() {
         val option3TextView = view?.findViewById<RadioButton>(R.id.opcion3RadioButton)
         option3TextView?.text = "C) ${question.options[2]}"
     }
+
+    private fun nextQuestion() {
+        questionIndex.incrementAndGet()  // Incrementa el índice al siguiente
+        showQuestions()  // Muestra la siguiente pregunta
+    }
+
+
 
 
     override fun onDestroyView() {

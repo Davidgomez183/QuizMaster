@@ -14,7 +14,7 @@
         android:padding="16dp">
 
         <Button
-            android:id="@+id/comprobar"
+            android:id="@+id/siguienteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="136dp"
@@ -52,9 +52,9 @@
             android:layout_height="56dp"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="40dp"
-            android:background="#C591D2"
+            android:background="#F7F7F7"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/opcion1RadioButton"
             app:layout_constraintEnd_toEndOf="parent"
