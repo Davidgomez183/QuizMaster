@@ -79,7 +79,7 @@
             android:drawableStart="@drawable/numeros"
             android:ems="10"
             android:inputType="text"
-            android:text="Number"
+            android:text="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
