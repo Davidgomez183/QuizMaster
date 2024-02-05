@@ -1,5 +1,6 @@
 package com.example.lamevaprimeraaplicaci
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
@@ -25,7 +27,8 @@ class SecondFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val questionIndex = AtomicInteger(0)  // Inicializa el índice en 0
-
+    private var puntaje = 0
+    private var indicePregunta = 0  // Nuevo índice para el array de preguntas
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -42,26 +45,28 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
         val nombreValor = args.nombre
-        val score = 0
+
         val countText = getString(R.string.here_is_a_random_number_between_0_and_d, count)
-        view.findViewById<TextView>(R.id.textView3).text = countText
+        view.findViewById<TextView>(R.id.puntaje).text = countText
 
         val nombreText = getString(R.string.here_is_the_name_s, nombreValor)
-        view.findViewById<TextView>(R.id.textView3).text = nombreText
+        view.findViewById<TextView>(R.id.puntaje).text = nombreText
 
         showQuestions()
+
+        val puntajeTextView = view.findViewById<TextView>(R.id.puntajeTextView)
+        puntajeTextView.text = "Score: $puntaje"
 
         val nextButton = view?.findViewById<Button>(R.id.siguienteButton)
         nextButton?.setOnClickListener {
             nextQuestion()
+            verificarRespuestaYMoverSiguiente()
         }
 
     }
-
     private fun showQuestions() {
         val numberOfQuestionsToShow = 1
         val questionsToShow = QuestionRepository.allQuestions.toList().shuffled().take(numberOfQuestionsToShow)
@@ -102,9 +107,64 @@ class SecondFragment : Fragment() {
             showQuestions()  // Muestra la primera pregunta de nuevo
         }
     }
+   // Esta función se encarga de verificar si la opción seleccionada por el usuario
+   // es la respuesta correcta a la pregunta actual. Si es correcta, incrementa el puntaje en 10 puntos.
+   private fun verificarRespuestaYMoverSiguiente() {
+       val opcionSeleccionada = obtenerOpcionSeleccionada()
+       val preguntaActual = QuestionRepository.allQuestions[indicePregunta]
 
+       if (opcionSeleccionada == preguntaActual.correctAnswer) {
+           puntaje += 10
+       }
 
+       val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
+       puntajeTextView?.text = "Score: $puntaje"
 
+       siguientePregunta()
+   }
+//Esta función obtiene la opción seleccionada por el usuario en el grupo de botones de radio.
+// Utiliza el ID del botón de radio seleccionado
+// para determinar la opción correspondiente en la lista de opciones de la pregunta actual.
+private fun obtenerOpcionSeleccionada(): String? {
+    val grupoRadio = view?.findViewById<RadioGroup>(R.id.opcionesRadioGroup)
+    val idRadioButtonSeleccionado = grupoRadio?.checkedRadioButtonId
+    val opciones = QuestionRepository.allQuestions[indicePregunta].options
+
+    return when (idRadioButtonSeleccionado) {
+        R.id.opcion1RadioButton -> opciones[0]
+        R.id.opcion2RadioButton -> opciones[1]
+        R.id.opcion3RadioButton -> opciones[2]
+        else -> null
+    }
+}
+
+    private fun siguientePregunta() {
+        indicePregunta++
+
+        if (indicePregunta < QuestionRepository.allQuestions.size) {
+            showQuestion(QuestionRepository.allQuestions[indicePregunta])
+        } else {
+            // Aquí puedes manejar el caso cuando se hayan mostrado todas las preguntas
+            // Por ejemplo, mostrar un mensaje de fin de juego o reiniciar el cuestionario
+            // Reiniciar el índice y puntaje para comenzar de nuevo
+            mostrarDialogoFinJuego()
+            indicePregunta = 0
+            puntaje = 0
+            showQuestion(QuestionRepository.allQuestions[indicePregunta])
+        }
+    }
+    private fun mostrarDialogoFinJuego() {
+        val nombreValor = requireArguments().getString("nombre")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Fin del juego")
+            .setMessage("Nombre: $nombreValor\nPuntaje: $puntaje")
+            .setPositiveButton("OK") { _, _ ->
+                // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
+            }
+            .setCancelable(false)  // Evita que el usuario cierre el diálogo con clic fuera del cuadro de diálogo
+            .create()
+            .show()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
