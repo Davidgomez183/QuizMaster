@@ -69,7 +69,7 @@ class SecondFragment : Fragment() {
     }
     private fun showQuestions() {
         val numberOfQuestionsToShow = 1
-        val questionsToShow = QuestionRepository.allQuestions.toList().shuffled().take(numberOfQuestionsToShow)
+        val questionsToShow = QuestionRepository.allQuestions.toList().take(numberOfQuestionsToShow)
 
         if (questionsToShow.isNotEmpty()) {
             showQuestion(questionsToShow.first())
@@ -115,6 +115,8 @@ class SecondFragment : Fragment() {
 
        if (opcionSeleccionada == preguntaActual.correctAnswer) {
            puntaje += 10
+       }else{
+           puntaje -=5
        }
 
        val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
