@@ -2,15 +2,22 @@ package com.example.lamevaprimeraaplicaci
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.os.SystemClock
+import android.text.Spanned
+import android.text.format.DateUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Chronometer
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
 import java.util.concurrent.atomic.AtomicInteger
@@ -57,14 +64,16 @@ class SecondFragment : Fragment() {
 
         showQuestions()
 
+
         val puntajeTextView = view.findViewById<TextView>(R.id.puntajeTextView)
-        puntajeTextView.text = "Score: $puntaje"
+        puntajeTextView.text = "Punts: $puntaje"
 
         val nextButton = view?.findViewById<Button>(R.id.siguienteButton)
         nextButton?.setOnClickListener {
             nextQuestion()
             verificarRespuestaYMoverSiguiente()
         }
+
 
     }
     private fun showQuestions() {
@@ -82,7 +91,8 @@ class SecondFragment : Fragment() {
         questionTextView?.text = question.questionText
 
         val option1TextView = view?.findViewById<RadioButton>(R.id.opcion1RadioButton)
-        option1TextView?.text = "A) ${question.options[0]}"
+        option1TextView?.text = "B) ${question.options[0]}"
+
 
         val option2TextView = view?.findViewById<RadioButton>(R.id.opcion2RadioButton)
         option2TextView?.text = "B) ${question.options[1]}"
@@ -94,6 +104,7 @@ class SecondFragment : Fragment() {
         val questionImage = view?.findViewById<ImageView>(R.id.questionImageView)
         questionImage?.setImageResource(question.imageResourceId)
     }
+
 
     private fun nextQuestion() {
         val newIndex = questionIndex.incrementAndGet()  // Incrementa el índice al siguiente
@@ -120,7 +131,7 @@ class SecondFragment : Fragment() {
        }
 
        val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
-       puntajeTextView?.text = "Score: $puntaje"
+       puntajeTextView?.text = "Punts: $puntaje"
 
        siguientePregunta()
    }
@@ -159,7 +170,7 @@ private fun obtenerOpcionSeleccionada(): String? {
         val nombreValor = requireArguments().getString("nombre")
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Fin del juego")
-            .setMessage("Nombre: $nombreValor\nPuntaje: $puntaje")
+            .setMessage("Nombre: $nombreValor\nPunts: $puntaje")
             .setPositiveButton("OK") { _, _ ->
                 // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
             }
@@ -167,6 +178,9 @@ private fun obtenerOpcionSeleccionada(): String? {
             .create()
             .show()
     }
+
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

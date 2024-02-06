@@ -4,7 +4,7 @@ data class Question(
     val questionText: String,
     val options: List<String>,
     val correctAnswer: String,
-    val imageResourceId: Int  // Identificador de recurso de imagen
+    val imageResourceId: Int
 )
 object QuestionRepository {
     val allQuestions = arrayOf(

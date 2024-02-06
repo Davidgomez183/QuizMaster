@@ -22,6 +22,6 @@
     <string name="random_bt">Jugar!</string>
     <string name="here_is_a_random_number_between_0_and_d">Numero de preguntes %d</string>
     <string name="r">R</string>
-    <string name="here_is_the_name_s">Hola %s</string>
+    <string name="here_is_the_name_s">Nom: %s</string>
     <string name="textoCentro0">0</string>
 </resources>
