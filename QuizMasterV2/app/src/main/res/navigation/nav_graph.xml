@@ -33,5 +33,8 @@
         <argument
             android:name="nombre"
             app:argType="string" />
+        <argument
+            android:name="opcionSeleccionada"
+            app:argType="string" />
     </fragment>
 </navigation>

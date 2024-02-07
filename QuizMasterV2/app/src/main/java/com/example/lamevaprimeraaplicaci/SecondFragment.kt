@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.SystemClock
 import android.text.Spanned
 import android.text.format.DateUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,8 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -36,7 +39,8 @@ class SecondFragment : Fragment() {
     private val questionIndex = AtomicInteger(0)  // Inicializa el índice en 0
     private var puntaje = 0
     private var indicePregunta = 0  // Nuevo índice para el array de preguntas
-
+    // En algún lugar de tu clase, puedes declarar tiempoTranscurrido como una variable de clase.
+    private var tiempoTranscurrido  = 0
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -52,15 +56,23 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Coger valores por argumentos
         val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
         val nombreValor = args.nombre
+        val opcionSelecionada = args.opcionSeleccionada
 
         val countText = getString(R.string.here_is_a_random_number_between_0_and_d, count)
         view.findViewById<TextView>(R.id.puntaje).text = countText
 
         val nombreText = getString(R.string.here_is_the_name_s, nombreValor)
         view.findViewById<TextView>(R.id.puntaje).text = nombreText
+
+        //Muestra el valor en la consola
+        Log.d("SecondFragment", "La opción seleccionada es: $opcionSelecionada")
+
+        // Muestra el valor en un TextView (asumiendo que tienes un TextView en tu layout con el id textViewOpcionSeleccionada)
+        view.findViewById<TextView>(R.id.opcionSelecionadaText).text = opcionSelecionada
 
         showQuestions()
 
@@ -74,6 +86,8 @@ class SecondFragment : Fragment() {
             verificarRespuestaYMoverSiguiente()
         }
 
+        // Iniciar el juego
+        iniciarJuego()
 
     }
     private fun showQuestions() {
@@ -81,18 +95,21 @@ class SecondFragment : Fragment() {
         val questionsToShow = QuestionRepository.allQuestions.toList().take(numberOfQuestionsToShow)
 
         if (questionsToShow.isNotEmpty()) {
-            showQuestion(questionsToShow.first())
+            MostrarPregunta(questionsToShow.first())
         }
     }
 
-    private fun showQuestion(question: Question) {
+    private fun iniciarJuego() {
+        siguientePregunta()
+        tiempoInicioPregunta = System.currentTimeMillis() // Inicializar el tiempo de inicio de la pregunta
+    }
+    private fun MostrarPregunta(question: Question) {
         // Mostrar Pregunta questionTextView
         val questionTextView = view?.findViewById<TextView>(R.id.PreguntaText)
         questionTextView?.text = question.questionText
 
         val option1TextView = view?.findViewById<RadioButton>(R.id.opcion1RadioButton)
-        option1TextView?.text = "B) ${question.options[0]}"
-
+        option1TextView?.text = "A) ${question.options[0]}"
 
         val option2TextView = view?.findViewById<RadioButton>(R.id.opcion2RadioButton)
         option2TextView?.text = "B) ${question.options[1]}"
@@ -118,16 +135,38 @@ class SecondFragment : Fragment() {
             showQuestions()  // Muestra la primera pregunta de nuevo
         }
     }
+    private var tiempoInicioPregunta: Long = 0
    // Esta función se encarga de verificar si la opción seleccionada por el usuario
    // es la respuesta correcta a la pregunta actual. Si es correcta, incrementa el puntaje en 10 puntos.
    private fun verificarRespuestaYMoverSiguiente() {
        val opcionSeleccionada = obtenerOpcionSeleccionada()
        val preguntaActual = QuestionRepository.allQuestions[indicePregunta]
 
+       // Inicializar el tiempo de inicio de la pregunta
+       tiempoInicioPregunta = System.currentTimeMillis()
+
+       val tiempoMaximoPorPregunta = when (opcionSeleccionada) {
+           "Facil" -> 3 // Tiempo máximo para preguntas fáciles (en segundos)
+           "Normal" -> 45 // Tiempo máximo para preguntas normales
+           "Dificil" -> 60 // Tiempo máximo para preguntas difíciles
+           else -> 30 // Por defecto, se asume un tiempo máximo de 30 segundos
+       }
+       val tiempoTranscurrido = (System.currentTimeMillis() - tiempoInicioPregunta) / 1000 // Calcular el tiempo transcurrido en segundos
+
        if (opcionSeleccionada == preguntaActual.correctAnswer) {
            puntaje += 10
        }else{
            puntaje -=5
+       }
+
+       // Verificar si se excedió el tiempo máximo
+       if (tiempoTranscurrido > tiempoMaximoPorPregunta) {
+           puntaje -= 10 // Restar 10 puntos si se excede el tiempo máximo
+       }
+
+       // Verificar si se excedió el tiempo máximo
+       if (tiempoTranscurrido > tiempoMaximoPorPregunta) {
+           puntaje -= 10 // Restar 10 puntos si se excede el tiempo máximo
        }
 
        val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
@@ -155,7 +194,7 @@ private fun obtenerOpcionSeleccionada(): String? {
         indicePregunta++
 
         if (indicePregunta < QuestionRepository.allQuestions.size) {
-            showQuestion(QuestionRepository.allQuestions[indicePregunta])
+            MostrarPregunta(QuestionRepository.allQuestions[indicePregunta])
         } else {
             // Aquí puedes manejar el caso cuando se hayan mostrado todas las preguntas
             // Por ejemplo, mostrar un mensaje de fin de juego o reiniciar el cuestionario
@@ -163,7 +202,7 @@ private fun obtenerOpcionSeleccionada(): String? {
             mostrarDialogoFinJuego()
             indicePregunta = 0
             puntaje = 0
-            showQuestion(QuestionRepository.allQuestions[indicePregunta])
+            MostrarPregunta(QuestionRepository.allQuestions[indicePregunta])
         }
     }
     private fun mostrarDialogoFinJuego() {
@@ -174,11 +213,12 @@ private fun obtenerOpcionSeleccionada(): String? {
             .setPositiveButton("OK") { _, _ ->
                 // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
             }
+
             .setCancelable(false)  // Evita que el usuario cierre el diálogo con clic fuera del cuadro de diálogo
             .create()
             .show()
+        puntaje = 0
     }
-
 
 
     override fun onDestroyView() {

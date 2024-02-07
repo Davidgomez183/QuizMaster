@@ -2,12 +2,14 @@ package com.example.lamevaprimeraaplicaci
 
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Chronometer
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -82,9 +84,12 @@ class FirstFragment : Fragment() {
 
             // Convierte el texto del contador a un valor numérico
             val currentCount = if (countText.isNotEmpty()) countText.toInt() else 0
+            //Otro argumento para pasar al second la opcion de dificil
+            val opcionSeleccionada = obtenerOpcionSeleccionada()
+            Log.d("TAG", "La opción seleccionada es: $opcionSeleccionada")
 
             // Crea la acción de navegación con los argumentos
-            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount, nombreText)
+            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment(currentCount, nombreText,opcionSeleccionada!!)
 
             findNavController().navigate(action)
 
@@ -104,7 +109,18 @@ class FirstFragment : Fragment() {
 
     }
 
+    private fun obtenerOpcionSeleccionada(): String? {
+        val grupoRadio = view?.findViewById<RadioGroup>(R.id.opcionesRadioGroupFirst)
+        val idRadioButtonSeleccionado = grupoRadio?.checkedRadioButtonId
 
+
+        return when (idRadioButtonSeleccionado) {
+            R.id.opcion1 -> "Facil"
+            R.id.opcion2 -> "Normal"
+            R.id.opcion3 -> "Dificil"
+            else -> null
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
