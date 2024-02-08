@@ -2,27 +2,18 @@ package com.example.lamevaprimeraaplicaci
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.SystemClock
-import android.text.Spanned
-import android.text.format.DateUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Chronometer
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -60,7 +51,7 @@ class SecondFragment : Fragment() {
         val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
         val nombreValor = args.nombre
-        val opcionSelecionada = args.opcionSeleccionada
+        val opcionSelecionadaDificultad = args.opcionSeleccionada
 
         val countText = getString(R.string.here_is_a_random_number_between_0_and_d, count)
         view.findViewById<TextView>(R.id.puntaje).text = countText
@@ -69,10 +60,10 @@ class SecondFragment : Fragment() {
         view.findViewById<TextView>(R.id.puntaje).text = nombreText
 
         //Muestra el valor en la consola
-        Log.d("SecondFragment", "La opción seleccionada es: $opcionSelecionada")
+        Log.d("SecondFragment", "La opción seleccionada es: $opcionSelecionadaDificultad")
 
         // Muestra el valor en un TextView (asumiendo que tienes un TextView en tu layout con el id textViewOpcionSeleccionada)
-        view.findViewById<TextView>(R.id.opcionSelecionadaText).text = opcionSelecionada
+        view.findViewById<TextView>(R.id.opcionSelecionadaText).text = opcionSelecionadaDificultad
 
         showQuestions()
 
@@ -86,8 +77,6 @@ class SecondFragment : Fragment() {
             verificarRespuestaYMoverSiguiente()
         }
 
-        // Iniciar el juego
-        iniciarJuego()
 
     }
     private fun showQuestions() {
@@ -99,10 +88,7 @@ class SecondFragment : Fragment() {
         }
     }
 
-    private fun iniciarJuego() {
-        siguientePregunta()
-        tiempoInicioPregunta = System.currentTimeMillis() // Inicializar el tiempo de inicio de la pregunta
-    }
+
     private fun MostrarPregunta(question: Question) {
         // Mostrar Pregunta questionTextView
         val questionTextView = view?.findViewById<TextView>(R.id.PreguntaText)
@@ -135,39 +121,26 @@ class SecondFragment : Fragment() {
             showQuestions()  // Muestra la primera pregunta de nuevo
         }
     }
-    private var tiempoInicioPregunta: Long = 0
+
    // Esta función se encarga de verificar si la opción seleccionada por el usuario
    // es la respuesta correcta a la pregunta actual. Si es correcta, incrementa el puntaje en 10 puntos.
    private fun verificarRespuestaYMoverSiguiente() {
        val opcionSeleccionada = obtenerOpcionSeleccionada()
        val preguntaActual = QuestionRepository.allQuestions[indicePregunta]
-
-       // Inicializar el tiempo de inicio de la pregunta
-       tiempoInicioPregunta = System.currentTimeMillis()
-
-       val tiempoMaximoPorPregunta = when (opcionSeleccionada) {
-           "Facil" -> 3 // Tiempo máximo para preguntas fáciles (en segundos)
-           "Normal" -> 45 // Tiempo máximo para preguntas normales
-           "Dificil" -> 60 // Tiempo máximo para preguntas difíciles
-           else -> 30 // Por defecto, se asume un tiempo máximo de 30 segundos
+       val opcionSeleccionadaDificultad = args.opcionSeleccionada
+       val puntosARestar  = when (opcionSeleccionadaDificultad) {
+           "Facil" -> facil()
+           "Normal" -> Normal()
+           "Dificil" -> Dificil()
+           else -> 0
        }
-       val tiempoTranscurrido = (System.currentTimeMillis() - tiempoInicioPregunta) / 1000 // Calcular el tiempo transcurrido en segundos
 
        if (opcionSeleccionada == preguntaActual.correctAnswer) {
            puntaje += 10
        }else{
-           puntaje -=5
+           puntaje -= puntosARestar // Restar puntos según la dificultad obtenida
        }
 
-       // Verificar si se excedió el tiempo máximo
-       if (tiempoTranscurrido > tiempoMaximoPorPregunta) {
-           puntaje -= 10 // Restar 10 puntos si se excede el tiempo máximo
-       }
-
-       // Verificar si se excedió el tiempo máximo
-       if (tiempoTranscurrido > tiempoMaximoPorPregunta) {
-           puntaje -= 10 // Restar 10 puntos si se excede el tiempo máximo
-       }
 
        val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
        puntajeTextView?.text = "Punts: $puntaje"
@@ -189,7 +162,17 @@ private fun obtenerOpcionSeleccionada(): String? {
         else -> null
     }
 }
+    private fun facil(): Int{
+        return 2
+    }
 
+    private fun Normal(): Int{
+        return 3
+    }
+
+    private fun Dificil(): Int{
+        return 5
+    }
     private fun siguientePregunta() {
         indicePregunta++
 
@@ -213,12 +196,12 @@ private fun obtenerOpcionSeleccionada(): String? {
             .setPositiveButton("OK") { _, _ ->
                 // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
             }
-
             .setCancelable(false)  // Evita que el usuario cierre el diálogo con clic fuera del cuadro de diálogo
             .create()
             .show()
         puntaje = 0
     }
+
 
 
     override fun onDestroyView() {
