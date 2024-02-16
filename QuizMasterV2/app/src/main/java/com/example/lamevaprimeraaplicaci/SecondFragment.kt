@@ -31,7 +31,7 @@ class SecondFragment : Fragment() {
     private val questionIndex = AtomicInteger(0)
     private var puntaje = 0
     private var indicePregunta = 0
-
+    private var questions: List<Question> = emptyList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,28 +59,41 @@ class SecondFragment : Fragment() {
         puntajeTextView.text = "Punts: $puntaje"
 
         val nextButton = view.findViewById<Button>(R.id.siguienteButton)
+
         nextButton.setOnClickListener {
             lifecycleScope.launch {
                 verificarRespuestaYMoverSiguiente()
             }
         }
-        // Mostramos la primera pregunta
-        showQuestions()
-    }
+        // Inicializar las preguntas aquí
+        loadQuestions()
 
+    }
+    private fun loadQuestions() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                questions = QuestionRepository.getAllQuestions()
+                // Aquí puedes mostrar la primera pregunta o hacer cualquier otro procesamiento necesario
+            } catch (e: Exception) {
+                // Manejar errores aquí
+                Toast.makeText(requireContext(), "Error al cargar las preguntas: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun showQuestions() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val questions = QuestionRepository.getAllQuestions()
+
                 val questionsToShow = questions.take(1) // Mostramos solo una pregunta
 
                 if (questionsToShow.isNotEmpty()) {
                     MostrarPregunta(questionsToShow.first())
                 }
             } catch (e: Exception) {
-                // Mostrar el error en un Toast
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+
+                val questionsSize = questions.size
+                Toast.makeText(requireContext(), "Tamaño de la lista de preguntas: $questionsSize", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -103,7 +116,8 @@ class SecondFragment : Fragment() {
             try {
                 val opcionSeleccionada = obtenerOpcionSeleccionada()
                 if (opcionSeleccionada != null) {
-                    val questions = QuestionRepository.getAllQuestions()
+
+
                     if (questions.isNotEmpty()) { // Verifica si hay preguntas disponibles
                         val newIndex = questionIndex.incrementAndGet()
                         if (newIndex < questions.size) {
@@ -132,9 +146,10 @@ class SecondFragment : Fragment() {
 
     private suspend fun verificarRespuestaYMoverSiguiente() {
         val opcionSeleccionada = obtenerOpcionSeleccionada()
-        val questions = QuestionRepository.getAllQuestions()
+
         val questionsString = questions.joinToString("\n") { it.questionText }
 
+        Toast.makeText(requireContext(), "ffff "+questions.size, Toast.LENGTH_SHORT).show()
         // Verificar si el índicePregunta está dentro de los límites de la lista de preguntas
         if (indicePregunta < questions.size) {
             val preguntaActual = questions[indicePregunta]
@@ -161,9 +176,10 @@ class SecondFragment : Fragment() {
 
             showNextQuestion()
         } else {
-            Toast.makeText(requireContext(), "Contenido de las preguntas:\n$questionsString", Toast.LENGTH_LONG).show()
-            // Manejo de la situación cuando el índice es mayor o igual al tamaño de la lista de preguntas
-            Toast.makeText(requireContext(), "Se ha alcanzado el final de las preguntas.", Toast.LENGTH_SHORT).show()
+
+            val questionsSize = questions.size
+            Toast.makeText(requireContext(), "Tamaño de la lista de preguntas: $questionsSize", Toast.LENGTH_SHORT).show() // Mostrar
+
         }
     }
 
@@ -171,7 +187,7 @@ class SecondFragment : Fragment() {
     private suspend fun obtenerOpcionSeleccionada(): String? {
         val grupoRadio = view?.findViewById<RadioGroup>(R.id.opcionesRadioGroup)
         val idRadioButtonSeleccionado = grupoRadio?.checkedRadioButtonId
-        val questions = QuestionRepository.getAllQuestions()
+
 
         return when (idRadioButtonSeleccionado) {
             R.id.opcion1RadioButton -> obtenerOpcion(questions, 0)

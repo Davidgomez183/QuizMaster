@@ -28,11 +28,8 @@ object QuestionRepository {
                     questionText = triviaQuestion.question,
                     options = triviaQuestion.incorrect_answers + triviaQuestion.correct_answer,
                     correctAnswer = triviaQuestion.correct_answer
-
                 )
-
             }
-
         } catch (e: Exception) {
             // Manejar errores aquí
             emptyList()
