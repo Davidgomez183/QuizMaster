@@ -8,13 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
+
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -22,24 +26,18 @@ import java.util.concurrent.atomic.AtomicInteger
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    private val questionIndex = AtomicInteger(0)  // Inicializa el índice en 0
+    private val questionIndex = AtomicInteger(0)
     private var puntaje = 0
-    private var indicePregunta = 0  // Nuevo índice para el array de preguntas
-    // En algún lugar de tu clase, puedes declarar tiempoTranscurrido como una variable de clase.
-    private var tiempoTranscurrido  = 0
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    private var indicePregunta = 0
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentSecondBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     val args: SecondFragmentArgs by navArgs()
@@ -47,50 +45,46 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Coger valores por argumentos
-        val args: SecondFragmentArgs by navArgs()
         val count = args.Countnumber
         val nombreValor = args.nombre
         val opcionSelecionadaDificultad = args.opcionSeleccionada
 
-        val countText = getString(R.string.here_is_a_random_number_between_0_and_d, count)
-        view.findViewById<TextView>(R.id.puntaje).text = countText
+        view.findViewById<TextView>(R.id.puntaje).text = getString(R.string.here_is_a_random_number_between_0_and_d, count)
+        view.findViewById<TextView>(R.id.puntaje).text = getString(R.string.here_is_the_name_s, nombreValor)
 
-        val nombreText = getString(R.string.here_is_the_name_s, nombreValor)
-        view.findViewById<TextView>(R.id.puntaje).text = nombreText
-
-        //Muestra el valor en la consola
         Log.d("SecondFragment", "La opción seleccionada es: $opcionSelecionadaDificultad")
-
-        // Muestra el valor en un TextView (asumiendo que tienes un TextView en tu layout con el id textViewOpcionSeleccionada)
         view.findViewById<TextView>(R.id.opcionSelecionadaText).text = opcionSelecionadaDificultad
-
-        showQuestions()
-
 
         val puntajeTextView = view.findViewById<TextView>(R.id.puntajeTextView)
         puntajeTextView.text = "Punts: $puntaje"
 
-        val nextButton = view?.findViewById<Button>(R.id.siguienteButton)
-        nextButton?.setOnClickListener {
-            nextQuestion()
-            verificarRespuestaYMoverSiguiente()
+        val nextButton = view.findViewById<Button>(R.id.siguienteButton)
+        nextButton.setOnClickListener {
+            lifecycleScope.launch {
+                verificarRespuestaYMoverSiguiente()
+            }
         }
-
-
+        // Mostramos la primera pregunta
+        showQuestions()
     }
+
+
     private fun showQuestions() {
-        val numberOfQuestionsToShow = 1
-        val questionsToShow = QuestionRepository.allQuestions.toList().take(numberOfQuestionsToShow)
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val questions = QuestionRepository.getAllQuestions()
+                val questionsToShow = questions.take(1) // Mostramos solo una pregunta
 
-        if (questionsToShow.isNotEmpty()) {
-            MostrarPregunta(questionsToShow.first())
+                if (questionsToShow.isNotEmpty()) {
+                    MostrarPregunta(questionsToShow.first())
+                }
+            } catch (e: Exception) {
+                // Mostrar el error en un Toast
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
-
-
     private fun MostrarPregunta(question: Question) {
-        // Mostrar Pregunta questionTextView
         val questionTextView = view?.findViewById<TextView>(R.id.PreguntaText)
         questionTextView?.text = question.questionText
 
@@ -102,107 +96,126 @@ class SecondFragment : Fragment() {
 
         val option3TextView = view?.findViewById<RadioButton>(R.id.opcion3RadioButton)
         option3TextView?.text = "C) ${question.options[2]}"
-
-        // Mostrar la imagen
-        val questionImage = view?.findViewById<ImageView>(R.id.questionImageView)
-        questionImage?.setImageResource(question.imageResourceId)
     }
 
-
-    private fun nextQuestion() {
-        val newIndex = questionIndex.incrementAndGet()  // Incrementa el índice al siguiente
-        if (newIndex < QuestionRepository.allQuestions.size) {
-            showQuestions()  // Muestra la siguiente pregunta
-        } else {
-            // Aquí puedes manejar el caso cuando se hayan mostrado todas las preguntas
-            // Puedes reiniciar el índice o realizar otra acción según tu lógica
-            // Por ejemplo:
-            questionIndex.set(0)
-            showQuestions()  // Muestra la primera pregunta de nuevo
+    private fun showNextQuestion() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val opcionSeleccionada = obtenerOpcionSeleccionada()
+                if (opcionSeleccionada != null) {
+                    val questions = QuestionRepository.getAllQuestions()
+                    if (questions.isNotEmpty()) { // Verifica si hay preguntas disponibles
+                        val newIndex = questionIndex.incrementAndGet()
+                        if (newIndex < questions.size) {
+                            val preguntaActual = questions[newIndex]
+                            MostrarPregunta(preguntaActual)
+                            indicePregunta = newIndex
+                        } else {
+                            mostrarDialogoFinJuego()
+                        }
+                    } else {
+                        // Mostrar un mensaje indicando que no hay más preguntas disponibles
+                        Toast.makeText(requireContext(), "No hay más preguntas disponibles", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Mostrar un mensaje indicando que se debe seleccionar una respuesta antes de pasar a la siguiente pregunta
+                    Toast.makeText(requireContext(), "Debe seleccionar una respuesta", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                // Mostrar el error en un Toast
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-   // Esta función se encarga de verificar si la opción seleccionada por el usuario
-   // es la respuesta correcta a la pregunta actual. Si es correcta, incrementa el puntaje en 10 puntos.
-   private fun verificarRespuestaYMoverSiguiente() {
-       val opcionSeleccionada = obtenerOpcionSeleccionada()
-       val preguntaActual = QuestionRepository.allQuestions[indicePregunta]
-       val opcionSeleccionadaDificultad = args.opcionSeleccionada
-       val puntosARestar  = when (opcionSeleccionadaDificultad) {
-           "Facil" -> facil()
-           "Normal" -> Normal()
-           "Dificil" -> Dificil()
-           else -> 0
-       }
-
-       if (opcionSeleccionada == preguntaActual.correctAnswer) {
-           puntaje += 10
-       }else{
-           puntaje -= puntosARestar // Restar puntos según la dificultad obtenida
-       }
 
 
-       val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
-       puntajeTextView?.text = "Punts: $puntaje"
+    private suspend fun verificarRespuestaYMoverSiguiente() {
+        val opcionSeleccionada = obtenerOpcionSeleccionada()
+        val questions = QuestionRepository.getAllQuestions()
+        val questionsString = questions.joinToString("\n") { it.questionText }
 
-       siguientePregunta()
-   }
-//Esta función obtiene la opción seleccionada por el usuario en el grupo de botones de radio.
-// Utiliza el ID del botón de radio seleccionado
-// para determinar la opción correspondiente en la lista de opciones de la pregunta actual.
-private fun obtenerOpcionSeleccionada(): String? {
-    val grupoRadio = view?.findViewById<RadioGroup>(R.id.opcionesRadioGroup)
-    val idRadioButtonSeleccionado = grupoRadio?.checkedRadioButtonId
-    val opciones = QuestionRepository.allQuestions[indicePregunta].options
+        // Verificar si el índicePregunta está dentro de los límites de la lista de preguntas
+        if (indicePregunta < questions.size) {
+            val preguntaActual = questions[indicePregunta]
+            val opcionSeleccionadaDificultad = args.opcionSeleccionada
+            val puntosARestar = when (opcionSeleccionadaDificultad) {
+                "Facil" -> facil()
+                "Normal" -> Normal()
+                "Dificil" -> Dificil()
+                else -> 0
+            }
 
-    return when (idRadioButtonSeleccionado) {
-        R.id.opcion1RadioButton -> opciones[0]
-        R.id.opcion2RadioButton -> opciones[1]
-        R.id.opcion3RadioButton -> opciones[2]
-        else -> null
+            val preguntasFalladas = mutableListOf<Question>()
+            if (opcionSeleccionada == preguntaActual.correctAnswer) {
+                puntaje += 10
+                Toast.makeText(requireContext(), "¡Respuesta correcta! Has ganado 10 puntos.", Toast.LENGTH_SHORT).show()
+            } else {
+                puntaje -= puntosARestar
+                preguntasFalladas.add(preguntaActual)
+                Toast.makeText(requireContext(), "Respuesta incorrecta. Se han restado $puntosARestar puntos.", Toast.LENGTH_SHORT).show()
+            }
+
+            val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
+            puntajeTextView?.text = "Punts: $puntaje"
+
+            showNextQuestion()
+        } else {
+            Toast.makeText(requireContext(), "Contenido de las preguntas:\n$questionsString", Toast.LENGTH_LONG).show()
+            // Manejo de la situación cuando el índice es mayor o igual al tamaño de la lista de preguntas
+            Toast.makeText(requireContext(), "Se ha alcanzado el final de las preguntas.", Toast.LENGTH_SHORT).show()
+        }
     }
-}
-    private fun facil(): Int{
+
+
+    private suspend fun obtenerOpcionSeleccionada(): String? {
+        val grupoRadio = view?.findViewById<RadioGroup>(R.id.opcionesRadioGroup)
+        val idRadioButtonSeleccionado = grupoRadio?.checkedRadioButtonId
+        val questions = QuestionRepository.getAllQuestions()
+
+        return when (idRadioButtonSeleccionado) {
+            R.id.opcion1RadioButton -> obtenerOpcion(questions, 0)
+            R.id.opcion2RadioButton -> obtenerOpcion(questions, 1)
+            R.id.opcion3RadioButton -> obtenerOpcion(questions, 2)
+            else -> null
+        }
+    }
+
+    private suspend fun obtenerOpcion(questions: List<Question>, index: Int): String? {
+        return if (index < 0 || index >= questions.size) {
+            null
+        } else {
+            val opciones = questions[indicePregunta].options // Utiliza el índice de la pregunta actual
+            if (index < opciones.size) opciones[index] else null
+        }
+    }
+
+    private fun facil(): Int {
         return 2
     }
 
-    private fun Normal(): Int{
+    private fun Normal(): Int {
         return 3
     }
 
-    private fun Dificil(): Int{
+    private fun Dificil(): Int {
         return 5
     }
-    private fun siguientePregunta() {
-        indicePregunta++
 
-        if (indicePregunta < QuestionRepository.allQuestions.size) {
-            MostrarPregunta(QuestionRepository.allQuestions[indicePregunta])
-        } else {
-            // Aquí puedes manejar el caso cuando se hayan mostrado todas las preguntas
-            // Por ejemplo, mostrar un mensaje de fin de juego o reiniciar el cuestionario
-            // Reiniciar el índice y puntaje para comenzar de nuevo
-            mostrarDialogoFinJuego()
-            indicePregunta = 0
-            puntaje = 0
-            MostrarPregunta(QuestionRepository.allQuestions[indicePregunta])
-        }
-    }
     private fun mostrarDialogoFinJuego() {
         val nombreValor = requireArguments().getString("nombre")
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Fin del juego")
-            .setMessage("Nombre: $nombreValor\nPunts: $puntaje")
+
             .setPositiveButton("OK") { _, _ ->
                 // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
             }
-            .setCancelable(false)  // Evita que el usuario cierre el diálogo con clic fuera del cuadro de diálogo
+            .setCancelable(false)
             .create()
             .show()
         puntaje = 0
+
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

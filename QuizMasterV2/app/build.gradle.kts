@@ -16,11 +16,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true  //Optimizar codigo y ofuscacion
+            isShrinkResources = true //Reducir recursos
+
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -33,6 +38,11 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+
+    packagingOptions {
+        exclude("META-INF/INDEX.LIST")
+        exclude("META-INF/io.netty.versions.properties")
     }
 }
 
@@ -49,4 +59,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    //Para usar API
+    implementation ("io.ktor:ktor-server-netty:1.6.6")
+    implementation("io.ktor:ktor-client-android:1.6.6")
+    implementation("io.ktor:ktor-client-json:1.6.6")
+    implementation("io.ktor:ktor-client-gson:1.6.6")
 }

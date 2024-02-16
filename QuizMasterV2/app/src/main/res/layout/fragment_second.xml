@@ -13,13 +13,14 @@
         android:background="@color/ic_launcher_background"
         android:padding="16dp">
 
+
         <Button
             android:id="@+id/siguienteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="136dp"
-            android:layout_marginTop="280dp"
-            android:layout_marginEnd="141dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="130dp"
             android:layout_marginBottom="16dp"
             android:background="@color/material_dynamic_neutral_variant60"
             android:text="@string/previous"
@@ -27,8 +28,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/opcionesRadioGroup" />
-
+            app:layout_constraintTop_toBottomOf="@+id/questionImageView" />
 
         <TextView
             android:id="@+id/puntaje"
@@ -57,7 +57,8 @@
             app:layout_constraintBottom_toTopOf="@+id/opcion1RadioButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/puntaje" />
+            app:layout_constraintTop_toBottomOf="@+id/puntaje"
+            tools:ignore="NotSibling" />
 
         <RadioGroup
             android:id="@+id/opcionesRadioGroup"

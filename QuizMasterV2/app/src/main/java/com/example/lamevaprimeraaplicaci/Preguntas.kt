@@ -1,22 +1,51 @@
 package com.example.lamevaprimeraaplicaci
 
+import io.ktor.client.*
+import io.ktor.client.engine.android.*
+import io.ktor.client.features.json.*
+import io.ktor.client.request.*
+
 data class Question(
     val questionText: String,
     val options: List<String>,
-    val correctAnswer: String,
-    val imageResourceId: Int
+    val correctAnswer: String
 )
-object QuestionRepository {
-    val allQuestions = arrayOf(
-        Question("¿Cuál es la capital de Japón?", listOf("Seúl", "Pekín", "Tokio", "Bangkok"), "Tokio",R.drawable.japon),
-        Question("¿Cuál es el río más largo del mundo?", listOf("Amazonas", "Nilo", "Yangtsé", "Misisipi"), "Amazonas",R.drawable.amazonas),
-        Question("¿Cuál es el animal más grande del mundo?", listOf("Elefante", "Ballena azul", "Jirafa", "Tiburón ballena"), "Ballena azul",R.drawable.animales),
-        Question("¿En qué país se encuentra la Gran Muralla China?", listOf("China", "Japón", "India", "Corea del Sur"), "China",R.drawable.murallachina),
-        Question("¿Cuántos continentes hay en el mundo?", listOf("5", "6", "7", "8"), "7", R.drawable.continentes),
-        Question("¿Cuál es el planeta más grande del sistema solar?", listOf("Tierra", "Júpiter", "Saturno", "Marte"), "Júpiter", R.drawable.planetas),
-        Question("¿Cuál es el país más grande del mundo por área terrestre?", listOf("Estados Unidos", "Rusia", "China", "Canadá"), "Rusia", R.drawable.paises),
-        Question("¿Quién pintó la Mona Lisa?", listOf("Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso", "Claude Monet"), "Leonardo da Vinci", R.drawable.monalisa) ,
-        Question("¿Cuál es el elemento más abundante en la corteza terrestre?", listOf("Oxígeno", "Silicio", "Aluminio", "Hierro"), "Oxígeno", R.drawable.elemtnos)
-    )
 
+object QuestionRepository {
+    private const val API_URL = "https://opentdb.com/api.php?amount=10&type=multiple"
+
+    private val client = HttpClient(Android) {
+        install(JsonFeature) {
+            serializer = GsonSerializer()
+        }
+    }
+
+    suspend fun getAllQuestions(): List<Question> {
+        return try {
+            val response = client.get<TriviaResponse>(API_URL)
+            response.results.map { triviaQuestion ->
+                Question(
+                    questionText = triviaQuestion.question,
+                    options = triviaQuestion.incorrect_answers + triviaQuestion.correct_answer,
+                    correctAnswer = triviaQuestion.correct_answer
+
+                )
+
+            }
+
+        } catch (e: Exception) {
+            // Manejar errores aquí
+            emptyList()
+        }
+    }
 }
+
+data class TriviaResponse(
+    val results: List<TriviaQuestion>
+)
+
+data class TriviaQuestion(
+    val question: String,
+    val correct_answer: String,
+    val incorrect_answers: List<String>
+)

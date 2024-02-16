@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#No ofuscar esta classe
+-keep class com.example.lamevaprimeraaplicaci.QuestionRepository
+-keep class com.example.lamevaprimeraaplicaci.SecondFragment
