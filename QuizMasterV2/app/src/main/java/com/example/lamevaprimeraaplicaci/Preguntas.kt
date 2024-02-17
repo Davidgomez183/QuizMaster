@@ -12,7 +12,7 @@ data class Question(
 )
 
 object QuestionRepository {
-    private const val API_URL = "https://opentdb.com/api.php?amount=10&type=multiple"
+    private const val API_URL = "https://opentdb.com/api.php?amount=20&type=multiple"
 
     private val client = HttpClient(Android) {
         install(JsonFeature) {

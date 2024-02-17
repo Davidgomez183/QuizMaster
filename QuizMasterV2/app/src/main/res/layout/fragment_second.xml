@@ -1,172 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecondFragment">
+    android:background="@color/light_gray">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ic_launcher_background"
+        android:background="#B670C2"
         android:padding="16dp">
 
+        <TextView
+            android:id="@+id/puntaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            android:text="Points: 0"
+            android:textColor="#6A1B9A"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/PreguntaText"
+            android:layout_width="393dp"
+            android:layout_height="154dp"
+            android:layout_below="@id/puntaje"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="24dp"
+            android:background="#673AB7"
+            android:text=""
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/opcionesRadioGroup"
+            android:layout_width="395dp"
+            android:layout_height="217dp"
+            android:layout_below="@id/PreguntaText"
+            android:layout_marginTop="0dp"
+            android:fontFamily="sans-serif"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/opcion1RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:background="@drawable/radio_button_selector"
+                android:text=""
+                android:textColor="@color/white"
+                android:textColorLink="@color/greenbt"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp" />
+
+
+            <RadioButton
+                android:id="@+id/opcion2RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/radio_button_selector"
+                android:buttonTint="@color/blue"
+                android:text=""
+                android:textColor="@color/white"
+                android:textColorLink="@color/greenbt"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/opcion3RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/radio_button_selector"
+                android:buttonTint="@color/white"
+                android:text=""
+                android:textColor="@color/white"
+                android:textColorLink="@color/greenbt"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp" />
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/siguienteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="130dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="130dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/material_dynamic_neutral_variant60"
+            android:layout_below="@id/opcionesRadioGroup"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:background="#1976D2"
+            android:paddingStart="24dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="12dp"
             android:text="@string/previous"
-            android:textColor="#212121"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/questionImageView" />
-
-        <TextView
-            android:id="@+id/puntaje"
-            android:layout_width="94dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="40dp"
-            android:text="@string/here_is_the_name_s"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/PreguntaText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/PreguntaText"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="40dp"
-            android:text=""
-            android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/opcion1RadioButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/puntaje"
-            tools:ignore="NotSibling" />
+            android:fontFamily="sans-serif"
+            android:textSize="20sp" />
 
-        <RadioGroup
-            android:id="@+id/opcionesRadioGroup"
-            android:layout_width="417dp"
-            android:layout_height="173dp"
-            android:layout_marginStart="-70dp"
-            android:layout_marginEnd="11dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/questionImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/PreguntaText">
+    </RelativeLayout>
 
-            <RadioButton
-                android:id="@+id/opcion1RadioButton"
-                style="@android:style/Widget.Holo.CompoundButton.RadioButton"
-                android:layout_width="291dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="213dp"
-                android:button="@android:drawable/btn_star_big_off"
-                android:buttonTint="#4CAF50"
-                android:text=""
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreguntaText" />
-
-            <RadioButton
-                android:id="@+id/opcion2RadioButton"
-                android:layout_width="291dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="213dp"
-                android:button="@android:drawable/btn_star_big_off"
-                android:buttonTint="#4CAF50"
-                android:text=""
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/opcion3RadioButton" />
-
-            <RadioButton
-                android:id="@+id/opcion3RadioButton"
-                android:layout_width="291dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="213dp"
-                android:button="@android:drawable/btn_star_big_off"
-                android:buttonTint="#4CAF50"
-                android:text=""
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/opcion1RadioButton" />
-
-        </RadioGroup>
-
-
-        <ImageView
-            android:id="@+id/questionImageView"
-            android:layout_width="279dp"
-            android:layout_height="248dp"
-            android:layout_marginStart="136dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="137dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/opcionesRadioGroup"
-            app:srcCompat="@drawable/ic_launcher_foreground" />
-
-        <TextView
-            android:id="@+id/puntajeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="58dp"
-            android:layout_marginTop="28dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="62dp"
-            android:text="Punts: 0"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/PreguntaText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.887"
-            app:layout_constraintStart_toEndOf="@+id/puntaje"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
-
-        <TextView
-            android:id="@+id/opcionSelecionadaText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="-30dp"
-            android:layout_marginEnd="-30dp"
-            android:layout_marginBottom="40dp"
-            android:text="TextView"
-            android:textColor="#0150FF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/PreguntaText"
-            app:layout_constraintEnd_toStartOf="@+id/puntajeTextView"
-            app:layout_constraintStart_toEndOf="@+id/puntaje"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
+

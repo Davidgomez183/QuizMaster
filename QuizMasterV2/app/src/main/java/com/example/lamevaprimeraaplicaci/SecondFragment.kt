@@ -1,6 +1,7 @@
 package com.example.lamevaprimeraaplicaci
 
 import android.app.AlertDialog
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,7 +16,6 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -53,10 +53,10 @@ class SecondFragment : Fragment() {
         view.findViewById<TextView>(R.id.puntaje).text = getString(R.string.here_is_the_name_s, nombreValor)
 
         Log.d("SecondFragment", "La opción seleccionada es: $opcionSelecionadaDificultad")
-        view.findViewById<TextView>(R.id.opcionSelecionadaText).text = opcionSelecionadaDificultad
+        //view.findViewById<TextView>(R.id.opcionSelecionadaText).text = opcionSelecionadaDificultad
 
-        val puntajeTextView = view.findViewById<TextView>(R.id.puntajeTextView)
-        puntajeTextView.text = "Punts: $puntaje"
+        val puntajeTextView = view.findViewById<TextView>(R.id.puntaje)
+        puntajeTextView.text = "Points: $puntaje"
 
         val nextButton = view.findViewById<Button>(R.id.siguienteButton)
 
@@ -72,14 +72,36 @@ class SecondFragment : Fragment() {
     private fun loadQuestions() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                questions = QuestionRepository.getAllQuestions()
-                // Aquí puedes mostrar la primera pregunta o hacer cualquier otro procesamiento necesario
+                val loadedQuestions = QuestionRepository.getAllQuestions()
+                // Aquí procesas las preguntas para asegurarte de que la respuesta correcta esté en la tercera opción
+                questions = loadedQuestions.map { question ->
+                    val opcionesConRespuestaCorrecta = question.options.toMutableList()
+                    if (!opcionesConRespuestaCorrecta.contains(question.correctAnswer)) {
+                        // Agregar la respuesta correcta si aún no está presente
+                        opcionesConRespuestaCorrecta.add(question.correctAnswer)
+                    }
+
+                    // Asegurarte de que la respuesta correcta esté en la tercera posición
+                    val correctAnswerIndex = opcionesConRespuestaCorrecta.indexOf(question.correctAnswer)
+                    if (correctAnswerIndex != 2) {
+                        // Intercambiar la respuesta correcta con la tercera opción
+                        opcionesConRespuestaCorrecta[2] = question.correctAnswer
+                        opcionesConRespuestaCorrecta[correctAnswerIndex] = question.options[2]
+                    }
+
+                    question.copy(options = opcionesConRespuestaCorrecta)
+                }
+                // Ahora puedes mostrar la primera pregunta o hacer cualquier otro procesamiento necesario
+                showQuestions()
             } catch (e: Exception) {
                 // Manejar errores aquí
                 Toast.makeText(requireContext(), "Error al cargar las preguntas: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+
+
 
     private fun showQuestions() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -142,7 +164,27 @@ class SecondFragment : Fragment() {
         }
     }
 
+    private var mediaPlayer: MediaPlayer? = null
 
+    private fun reproducirSonidoAplausos() {
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.correcto)
+        mediaPlayer?.start()
+    }
+
+    private fun reproducirSonidoIncorrecto() {
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.incorrecto)
+        mediaPlayer?.start()
+    }
+
+    private fun releaseMediaPlayerIncorrecto() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
+    private fun releaseMediaPlayer() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
 
     private suspend fun verificarRespuestaYMoverSiguiente() {
         val opcionSeleccionada = obtenerOpcionSeleccionada()
@@ -164,14 +206,16 @@ class SecondFragment : Fragment() {
             val preguntasFalladas = mutableListOf<Question>()
             if (opcionSeleccionada == preguntaActual.correctAnswer) {
                 puntaje += 10
+                reproducirSonidoAplausos()
                 Toast.makeText(requireContext(), "¡Respuesta correcta! Has ganado 10 puntos.", Toast.LENGTH_SHORT).show()
             } else {
                 puntaje -= puntosARestar
+                reproducirSonidoIncorrecto()
                 preguntasFalladas.add(preguntaActual)
                 Toast.makeText(requireContext(), "Respuesta incorrecta. Se han restado $puntosARestar puntos.", Toast.LENGTH_SHORT).show()
             }
 
-            val puntajeTextView = view?.findViewById<TextView>(R.id.puntajeTextView)
+            val puntajeTextView = view?.findViewById<TextView>(R.id.puntaje)
             puntajeTextView?.text = "Punts: $puntaje"
 
             showNextQuestion()
@@ -222,19 +266,20 @@ class SecondFragment : Fragment() {
         val nombreValor = requireArguments().getString("nombre")
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Fin del juego")
-
+            .setMessage("Nombre: $nombreValor\nPunts: $puntaje")
             .setPositiveButton("OK") { _, _ ->
                 // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
             }
-            .setCancelable(false)
+            .setCancelable(false)  // Evita que el usuario cierre el diálogo con clic fuera del cuadro de diálogo
             .create()
             .show()
         puntaje = 0
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        releaseMediaPlayer() //limpiar memoria
+        releaseMediaPlayerIncorrecto() //limpiar memoria
         _binding = null
     }
 }
