@@ -11,19 +11,18 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/screenBackground2"
+        android:background="#DDBBE3"
         android:padding="16dp">
 
         <Button
             android:id="@+id/Count_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:background="@color/design_default_color_secondary_variant"
             android:text="@string/Count_bt"
             android:textColor="#FFFFFF"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textview_first0" />
 
@@ -31,23 +30,20 @@
             android:id="@+id/Toast_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="216dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:background="@color/design_default_color_secondary_variant"
             android:text="-"
             android:textColor="#FFFFFF"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/Count_bt"
             app:layout_constraintTop_toBottomOf="@+id/textview_first0" />
 
         <Button
             android:id="@+id/Random_bt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="250dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="16dp"
             android:background="#25FFFD"
-            android:backgroundTint="#25FFFD"
             android:text="@string/random_bt"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,29 +52,27 @@
 
         <EditText
             android:id="@+id/nombreValor"
-            android:layout_width="316dp"
-            android:layout_height="46dp"
-            android:layout_marginStart="47dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="32dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:drawableStart="@drawable/baseline_person_24"
             android:ems="10"
             android:inputType="text"
             android:text="Name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.687"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Count_bt" />
 
         <EditText
             android:id="@+id/textview_first0"
-            android:layout_width="312dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="60dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:drawableStart="@drawable/numeros"
             android:ems="10"
             android:inputType="text"
-            android:text="Edat"
+            android:text="20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -86,13 +80,10 @@
 
         <RadioGroup
             android:id="@+id/opcionesRadioGroupFirst"
-            android:layout_width="417dp"
-            android:layout_height="173dp"
-            android:layout_marginStart="14dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="40dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/Random_bt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nombreValor">
@@ -100,48 +91,34 @@
             <RadioButton
                 android:id="@+id/opcion1"
                 style="@android:style/Widget.Holo.CompoundButton.RadioButton"
-                android:layout_width="291dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="213dp"
-                android:button="@android:drawable/btn_star_big_off"
-                android:buttonTint="#4CAF50"
-                android:text="Fácil"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreguntaText" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fácil" />
 
             <RadioButton
                 android:id="@+id/opcion2"
-                android:layout_width="292dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="213dp"
-                android:button="@android:drawable/btn_star_big_off"
-                android:buttonTint="#4CAF50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/opcion3RadioButton" />
+                android:text="Normal" />
 
             <RadioButton
                 android:id="@+id/opcion3"
-                android:layout_width="292dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="213dp"
-                android:button="@android:drawable/btn_star_big_off"
-                android:buttonTint="#4CAF50"
-                android:text="Difícil"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/opcion1" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Difícil" />
 
         </RadioGroup>
 
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="737dp"
+            android:layout_height="474dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Random_bt" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

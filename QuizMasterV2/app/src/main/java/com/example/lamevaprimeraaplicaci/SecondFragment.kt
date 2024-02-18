@@ -3,6 +3,7 @@ package com.example.lamevaprimeraaplicaci
 import android.app.AlertDialog
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,12 +14,13 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
 import kotlinx.coroutines.launch
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
-
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -32,6 +34,7 @@ class SecondFragment : Fragment() {
     private var puntaje = 0
     private var indicePregunta = 0
     private var questions: List<Question> = emptyList()
+    private var mediaPlayerFondo: MediaPlayer? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +70,10 @@ class SecondFragment : Fragment() {
         }
         // Inicializar las preguntas aquí
         loadQuestions()
+
+        mediaPlayerFondo = MediaPlayer.create(requireContext(), R.raw.fondo)
+        mediaPlayerFondo?.start()
+
 
     }
     private fun loadQuestions() {
@@ -190,8 +197,6 @@ class SecondFragment : Fragment() {
         val opcionSeleccionada = obtenerOpcionSeleccionada()
 
         val questionsString = questions.joinToString("\n") { it.questionText }
-
-        Toast.makeText(requireContext(), "ffff "+questions.size, Toast.LENGTH_SHORT).show()
         // Verificar si el índicePregunta está dentro de los límites de la lista de preguntas
         if (indicePregunta < questions.size) {
             val preguntaActual = questions[indicePregunta]
@@ -203,16 +208,18 @@ class SecondFragment : Fragment() {
                 else -> 0
             }
 
+
+
             val preguntasFalladas = mutableListOf<Question>()
             if (opcionSeleccionada == preguntaActual.correctAnswer) {
                 puntaje += 10
                 reproducirSonidoAplausos()
-                Toast.makeText(requireContext(), "¡Respuesta correcta! Has ganado 10 puntos.", Toast.LENGTH_SHORT).show()
+
             } else {
                 puntaje -= puntosARestar
                 reproducirSonidoIncorrecto()
                 preguntasFalladas.add(preguntaActual)
-                Toast.makeText(requireContext(), "Respuesta incorrecta. Se han restado $puntosARestar puntos.", Toast.LENGTH_SHORT).show()
+
             }
 
             val puntajeTextView = view?.findViewById<TextView>(R.id.puntaje)
@@ -226,6 +233,7 @@ class SecondFragment : Fragment() {
 
         }
     }
+
 
 
     private suspend fun obtenerOpcionSeleccionada(): String? {
@@ -280,6 +288,7 @@ class SecondFragment : Fragment() {
         super.onDestroyView()
         releaseMediaPlayer() //limpiar memoria
         releaseMediaPlayerIncorrecto() //limpiar memoria
+        mediaPlayerFondo = null
         _binding = null
     }
 }

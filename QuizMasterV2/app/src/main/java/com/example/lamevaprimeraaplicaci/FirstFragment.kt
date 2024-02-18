@@ -1,7 +1,10 @@
 package com.example.lamevaprimeraaplicaci
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
+import android.text.InputFilter
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +15,7 @@ import android.widget.Chronometer
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.navigation.fragment.findNavController
 import com.example.lamevaprimeraaplicaci.databinding.FragmentFirstBinding
 
@@ -20,6 +24,8 @@ import com.example.lamevaprimeraaplicaci.databinding.FragmentFirstBinding
  */
 class FirstFragment : Fragment() {
 
+
+    private var mediaPlayer: MediaPlayer? = null
     private var _binding: FragmentFirstBinding? = null
 
     // This property is only valid between onCreateView and
@@ -72,11 +78,19 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val videoView = view.findViewById<VideoView>(R.id.videoView)
 
+        val videoPath = "android.resource://" + requireContext().packageName + "/" + R.raw.vidio
+        videoView.setVideoURI(Uri.parse(videoPath))
+
+        // Iniciar la reproducción del video
+        videoView.start()
 
         view.findViewById<Button>(R.id.Random_bt).setOnClickListener {
             val showCountTextView = view.findViewById<TextView>(R.id.textview_first0)
             val nombreValor = view.findViewById<TextView>(R.id.nombreValor)
+
+
 
             // Obtén el texto de los TextViews
             val countText = showCountTextView.text.toString()
@@ -109,6 +123,7 @@ class FirstFragment : Fragment() {
 
     }
 
+
     private fun obtenerOpcionSeleccionada(): String? {
         val grupoRadio = view?.findViewById<RadioGroup>(R.id.opcionesRadioGroupFirst)
         val idRadioButtonSeleccionado = grupoRadio?.checkedRadioButtonId
@@ -124,6 +139,10 @@ class FirstFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        // Detiene la reproducción del video y libera los recursos cuando el fragmento se destruye
+        mediaPlayer?.release()
+
         _binding = null
     }
 }
