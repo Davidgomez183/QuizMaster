@@ -36,5 +36,12 @@
         <argument
             android:name="opcionSeleccionada"
             app:argType="string" />
+        <action
+            android:id="@+id/action_SecondFragment_to_resultadoActivity"
+            app:destination="@id/resultadoActivity" />
     </fragment>
+    <activity
+        android:id="@+id/resultadoActivity"
+        android:name="com.example.lamevaprimeraaplicaci.ResultadoActivity"
+        android:label="ResultadoActivity" />
 </navigation>

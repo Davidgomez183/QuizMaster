@@ -1,6 +1,7 @@
 package com.example.lamevaprimeraaplicaci
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -16,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
 import kotlinx.coroutines.launch
@@ -35,6 +37,7 @@ class SecondFragment : Fragment() {
     private var indicePregunta = 0
     private var questions: List<Question> = emptyList()
     private var mediaPlayerFondo: MediaPlayer? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,11 +51,11 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val count = args.Countnumber
+        val edat = args.Countnumber
         val nombreValor = args.nombre
         val opcionSelecionadaDificultad = args.opcionSeleccionada
 
-        view.findViewById<TextView>(R.id.puntaje).text = getString(R.string.here_is_a_random_number_between_0_and_d, count)
+        view.findViewById<TextView>(R.id.puntaje).text = getString(R.string.here_is_a_random_number_between_0_and_d, edat)
         view.findViewById<TextView>(R.id.puntaje).text = getString(R.string.here_is_the_name_s, nombreValor)
 
         Log.d("SecondFragment", "La opción seleccionada es: $opcionSelecionadaDificultad")
@@ -75,12 +78,15 @@ class SecondFragment : Fragment() {
         mediaPlayerFondo?.start()
 
 
+
+
+
     }
     private fun loadQuestions() {
+        var correctAnswerPosition = 0 // Variable para rastrear la posición de la respuesta correcta
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val loadedQuestions = QuestionRepository.getAllQuestions()
-                // Aquí procesas las preguntas para asegurarte de que la respuesta correcta esté en la tercera opción
                 questions = loadedQuestions.map { question ->
                     val opcionesConRespuestaCorrecta = question.options.toMutableList()
                     if (!opcionesConRespuestaCorrecta.contains(question.correctAnswer)) {
@@ -88,13 +94,16 @@ class SecondFragment : Fragment() {
                         opcionesConRespuestaCorrecta.add(question.correctAnswer)
                     }
 
-                    // Asegurarte de que la respuesta correcta esté en la tercera posición
+                    // Asegurarte de que la respuesta correcta esté en la posición correcta
                     val correctAnswerIndex = opcionesConRespuestaCorrecta.indexOf(question.correctAnswer)
-                    if (correctAnswerIndex != 2) {
-                        // Intercambiar la respuesta correcta con la tercera opción
-                        opcionesConRespuestaCorrecta[2] = question.correctAnswer
-                        opcionesConRespuestaCorrecta[correctAnswerIndex] = question.options[2]
+                    if (correctAnswerIndex != correctAnswerPosition) {
+                        // Intercambiar la respuesta correcta con la opción correspondiente
+                        opcionesConRespuestaCorrecta[correctAnswerPosition] = question.correctAnswer
+                        opcionesConRespuestaCorrecta[correctAnswerIndex] = question.options[correctAnswerPosition]
                     }
+
+                    // Actualizar la posición de la respuesta correcta para la próxima iteración
+                    correctAnswerPosition = (correctAnswerPosition + 1) % opcionesConRespuestaCorrecta.size
 
                     question.copy(options = opcionesConRespuestaCorrecta)
                 }
@@ -106,6 +115,7 @@ class SecondFragment : Fragment() {
             }
         }
     }
+
 
 
 
@@ -154,7 +164,7 @@ class SecondFragment : Fragment() {
                             MostrarPregunta(preguntaActual)
                             indicePregunta = newIndex
                         } else {
-                            mostrarDialogoFinJuego()
+                            mostrarFinJuego()
                         }
                     } else {
                         // Mostrar un mensaje indicando que no hay más preguntas disponibles
@@ -270,18 +280,19 @@ class SecondFragment : Fragment() {
         return 5
     }
 
-    private fun mostrarDialogoFinJuego() {
+
+    private fun mostrarFinJuego() {
+
         val nombreValor = requireArguments().getString("nombre")
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Fin del juego")
-            .setMessage("Nombre: $nombreValor\nPunts: $puntaje")
-            .setPositiveButton("OK") { _, _ ->
-                // Puedes agregar lógica adicional después de hacer clic en OK, si es necesario
-            }
-            .setCancelable(false)  // Evita que el usuario cierre el diálogo con clic fuera del cuadro de diálogo
-            .create()
-            .show()
-        puntaje = 0
+        val opcionSeleccionadaDificultad = args.opcionSeleccionada
+        val intent = Intent(requireContext(), ResultadoActivity::class.java).apply {
+            putExtra("nombre", nombreValor)
+            putExtra("opcion_seleccionada_dificultad", opcionSeleccionadaDificultad)
+            putExtra("puntaje", puntaje)
+
+        }
+
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

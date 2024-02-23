@@ -1,5 +1,6 @@
 package com.example.lamevaprimeraaplicaci
 
+import androidx.core.text.HtmlCompat
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.json.*
@@ -24,10 +25,13 @@ object QuestionRepository {
         return try {
             val response = client.get<TriviaResponse>(API_URL)
             response.results.map { triviaQuestion ->
+                val decodedQuestion = decodeHtmlEntities(triviaQuestion.question)
+                val decodedOptions = triviaQuestion.incorrect_answers.map { decodeHtmlEntities(it) } +
+                        listOf(decodeHtmlEntities(triviaQuestion.correct_answer))
                 Question(
-                    questionText = triviaQuestion.question,
-                    options = triviaQuestion.incorrect_answers + triviaQuestion.correct_answer,
-                    correctAnswer = triviaQuestion.correct_answer
+                    questionText = decodedQuestion,
+                    options = decodedOptions,
+                    correctAnswer = decodedOptions.last()
                 )
             }
         } catch (e: Exception) {
@@ -36,7 +40,9 @@ object QuestionRepository {
         }
     }
 }
-
+private fun decodeHtmlEntities(encodedText: String): String {
+    return HtmlCompat.fromHtml(encodedText, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+}
 data class TriviaResponse(
     val results: List<TriviaQuestion>
 )

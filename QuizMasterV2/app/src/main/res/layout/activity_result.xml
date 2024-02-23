@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/resultadosTextView"
+        android:layout_width="match_parent"
+        android:layout_height="164dp"
+
+        android:text="Datos base de datos"
+        android:textSize="18sp"
+        tools:ignore="NotSibling" />
+
+</RelativeLayout>

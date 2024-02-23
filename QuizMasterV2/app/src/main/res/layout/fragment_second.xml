@@ -30,14 +30,21 @@
             android:layout_height="100dp"
             android:layout_below="@id/puntaje"
             android:layout_marginTop="7dp"
-            android:layout_marginBottom="24dp"
-            android:background="#673AB7"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/rounded_background_text_view"
+            android:elevation="4dp"
             android:fontFamily="sans-serif"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
             android:text=""
-            android:textAlignment="textStart"
+            android:textAlignment="viewStart"
             android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+
+            />
 
         <RadioGroup
             android:id="@+id/opcionesRadioGroup"
@@ -53,11 +60,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
                 android:layout_marginBottom="40dp"
-                android:background="@drawable/radio_button_selector"
+                android:background="@drawable/rounded_button_checked"
                 android:fontFamily="sans-serif"
                 android:text=""
                 android:textColor="@color/white"
-                android:textColorLink="@color/greenbt"
                 android:textSize="18sp" />
 
 
@@ -67,12 +73,12 @@
                 android:layout_height="62dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="40dp"
-                android:background="@drawable/radio_button_selector"
                 android:buttonTint="@color/blue"
                 android:fontFamily="sans-serif"
                 android:text=""
                 android:textColor="@color/white"
                 android:textColorLink="@color/greenbt"
+                android:background="@drawable/rounded_button_checked"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -81,7 +87,7 @@
                 android:layout_height="62dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="40dp"
-                android:background="@drawable/radio_button_selector"
+                android:background="@drawable/rounded_button_checked"
                 android:buttonTint="@color/white"
                 android:fontFamily="sans-serif"
                 android:text=""
@@ -93,20 +99,30 @@
 
         <Button
             android:id="@+id/siguienteButton"
-            android:layout_width="wrap_content"
+            android:layout_width="344dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/opcionesRadioGroup"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="75dp"
-            android:background="#1976D2"
+            android:layout_marginTop="49dp"
+            android:background="@drawable/rounded_background_text_view"
+            android:backgroundTint="#FF0C0C"
             android:fontFamily="sans-serif"
             android:paddingStart="24dp"
-            android:paddingTop="12dp"
+            android:paddingTop="40dp"
             android:paddingEnd="24dp"
             android:paddingBottom="12dp"
             android:text="@string/previous"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
+
+        <!-- Agregar un LinearLayout para colocar el TextView -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/siguienteButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"/>
 
     </RelativeLayout>
 

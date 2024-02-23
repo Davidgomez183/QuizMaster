@@ -4,6 +4,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
 }
 
+
 android {
     namespace = "com.example.lamevaprimeraaplicaci"
     compileSdk = 33
@@ -64,4 +65,13 @@ dependencies {
     implementation("io.ktor:ktor-client-android:1.6.6")
     implementation("io.ktor:ktor-client-json:1.6.6")
     implementation("io.ktor:ktor-client-gson:1.6.6")
+    //Base de datos
+    implementation ("androidx.room:room-runtime:2.4.0")
+
+
+
+
+
+
+
 }
