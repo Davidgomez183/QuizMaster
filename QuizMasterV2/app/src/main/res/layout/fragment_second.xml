@@ -99,11 +99,11 @@
 
         <Button
             android:id="@+id/siguienteButton"
-            android:layout_width="344dp"
+            android:layout_width="356dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/opcionesRadioGroup"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="49dp"
+            android:layout_marginTop="57dp"
             android:background="@drawable/rounded_background_text_view"
             android:backgroundTint="#FF0C0C"
             android:fontFamily="sans-serif"
