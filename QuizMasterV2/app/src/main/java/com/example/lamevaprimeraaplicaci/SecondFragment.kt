@@ -1,12 +1,9 @@
 package com.example.lamevaprimeraaplicaci
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +12,11 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.lamevaprimeraaplicaci.databinding.FragmentSecondBinding
 import kotlinx.coroutines.launch
-import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -82,32 +77,26 @@ class SecondFragment : Fragment() {
 
 
     }
+
+    //Cargar las preguntas de manera Aleatoria loadQuestions()
+    //Splash Screen
+    //Database
     private fun loadQuestions() {
-        var correctAnswerPosition = 0 // Variable para rastrear la posición de la respuesta correcta
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val loadedQuestions = QuestionRepository.getAllQuestions()
-                questions = loadedQuestions.map { question ->
+                val loadedQuestions = QuestionRepository.getAllQuestions().shuffled() // Baraja las preguntas
+                val selectedQuestions = loadedQuestions.take(10) // Selecciona las primeras tres preguntas
+                questions = selectedQuestions.map { question ->
                     val opcionesConRespuestaCorrecta = question.options.toMutableList()
                     if (!opcionesConRespuestaCorrecta.contains(question.correctAnswer)) {
                         // Agregar la respuesta correcta si aún no está presente
                         opcionesConRespuestaCorrecta.add(question.correctAnswer)
                     }
-
-                    // Asegurarte de que la respuesta correcta esté en la posición correcta
-                    val correctAnswerIndex = opcionesConRespuestaCorrecta.indexOf(question.correctAnswer)
-                    if (correctAnswerIndex != correctAnswerPosition) {
-                        // Intercambiar la respuesta correcta con la opción correspondiente
-                        opcionesConRespuestaCorrecta[correctAnswerPosition] = question.correctAnswer
-                        opcionesConRespuestaCorrecta[correctAnswerIndex] = question.options[correctAnswerPosition]
-                    }
-
-                    // Actualizar la posición de la respuesta correcta para la próxima iteración
-                    correctAnswerPosition = (correctAnswerPosition + 1) % opcionesConRespuestaCorrecta.size
-
+                    // Baraja las opciones para que la respuesta correcta no siempre esté en la misma posición
+                    opcionesConRespuestaCorrecta.shuffle()
                     question.copy(options = opcionesConRespuestaCorrecta)
                 }
-                // Ahora puedes mostrar la primera pregunta o hacer cualquier otro procesamiento necesario
+                // Ahora puedes mostrar las preguntas cargadas
                 showQuestions()
             } catch (e: Exception) {
                 // Manejar errores aquí
@@ -115,7 +104,6 @@ class SecondFragment : Fragment() {
             }
         }
     }
-
 
 
 
