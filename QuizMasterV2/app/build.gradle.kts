@@ -2,17 +2,18 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-kapt")
 }
 
 
 android {
     namespace = "com.example.lamevaprimeraaplicaci"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.lamevaprimeraaplicaci"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -65,12 +66,10 @@ dependencies {
     implementation("io.ktor:ktor-client-android:1.6.6")
     implementation("io.ktor:ktor-client-json:1.6.6")
     implementation("io.ktor:ktor-client-gson:1.6.6")
+
     //Base de datos
-    implementation ("androidx.room:room-runtime:2.4.0")
-
-
-
-
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
 
 
 
