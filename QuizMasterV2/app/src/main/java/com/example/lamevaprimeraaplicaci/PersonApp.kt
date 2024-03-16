@@ -5,5 +5,10 @@ import androidx.room.Room
 
 class PersonApp : Application() {
 
-    val  room = Room.databaseBuilder(this, PeopleDb::class.java , name = "person").build()
+    lateinit var room: PeopleDb // Cambiado a lateinit para inicialización diferida
+
+    override fun onCreate() {
+        super.onCreate()
+        room = Room.databaseBuilder(this, PeopleDb::class.java, "person").build()
+    }
 }

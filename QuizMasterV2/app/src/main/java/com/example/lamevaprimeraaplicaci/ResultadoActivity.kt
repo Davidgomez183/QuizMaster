@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 
 class ResultadoActivity : AppCompatActivity() {
 
+    private lateinit var personDao: PersonDao // Declarar una variable lateinit para el DAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,43 +25,52 @@ class ResultadoActivity : AppCompatActivity() {
             val app = applicationContext as PersonApp
             val db = app.room
 
+            personDao = db.personDao() // Inicializar el DAO
+
             // Insertar los datos en la base de datos
-            val personDao = db.personDao()
             val person = Person(name = nombre, score = puntaje, dificil = dificultad ?: "")
-            insertPerson(personDao, person)
+            insertPerson(person)
 
-            GlobalScope.launch {
-                val personDao =
-                    app.room.personDao() // Obtener una instancia del DAO desde la base de datos
-                val allPersons =
-                    personDao.getAllPersons() // Obtener todas las personas de la base de datos
+            // Actualizar la vista después de insertar los datos
+            updateView()
 
-                // Mostrar los resultados en un Toast
-                val allPersonsString =
-                    allPersons.joinToString(separator = "\n") { "Nombre: ${it.name}, Puntaje: ${it.score}" }
-                showToast("Personas obtenidas de la base de datos:\n$allPersonsString")
-            }
         } catch (e: ClassCastException) {
             e.printStackTrace()
         }
-
-
-        // Realizar una consulta SELECT para obtener todas las personas
-
     }
 
-    private fun insertPerson(personDao: PersonDao, person: Person) {
+    private fun updateView() {
         GlobalScope.launch {
+            val allPersons = personDao.getAllPersons() // Obtener todos los registros de la base de datos
+            val allPersonsString = buildString {
+                append("Marcador:\n")
+                allPersons.forEachIndexed { index, person ->
+                    append("${index + 1}. Nombre: ${person.name}, Puntaje: ${person.score}\n")
+                }
+            }
+            // Mostrar todos los registros en el TextView
+            runOnUiThread {
+                val textViewResult = findViewById<TextView>(R.id.textViewResult)
+                textViewResult.text = allPersonsString
+            }
+        }
+    }
+    private fun insertPerson(person: Person) {
+        GlobalScope.launch {
+            // Insertar los datos en la base de datos
             personDao.insert(listOf(person))
+
             runOnUiThread {
                 // Obtener el TextView del layout
                 val textViewResult = findViewById<TextView>(R.id.textViewResult)
                 // Actualizar el TextView con los valores de person.name y person.score
                 textViewResult.text = "Nombre: ${person.name}, Puntaje: ${person.score}"
+
+                // Llamar a updateView para mostrar todos los jugadores, incluido el nuevo jugador insertado
+                updateView()
             }
         }
     }
-
 
 
     private fun showToast(message: String) {
@@ -69,7 +79,6 @@ class ResultadoActivity : AppCompatActivity() {
         }
     }
 }
-
 
 
 
