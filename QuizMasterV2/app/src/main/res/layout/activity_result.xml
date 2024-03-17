@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/textViewResult"
+    <TableLayout
+        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
-        android:layout_height="715dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
 
-</RelativeLayout>
+        <!-- Encabezado de la tabla -->
+        <TableRow>
+            <TextView
+                android:id="@+id/textViewHeader1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Columna 1"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/textViewHeader2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Columna 2"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <!-- Agrega más TextView para más columnas según sea necesario -->
+        </TableRow>
+
+        <!-- Agrega más TableRow para más filas según sea necesario -->
+
+    </TableLayout>
+
+</ScrollView>

@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_SecondFragment_to_resultadoActivity"
             app:destination="@id/resultadoActivity" />
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment2"
+            app:destination="@id/FirstFragment" />
     </fragment>
     <activity
         android:id="@+id/resultadoActivity"
