@@ -1,13 +1,18 @@
 package com.example.lamevaprimeraaplicaci
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ResultadoActivity : AppCompatActivity() {
@@ -40,28 +45,12 @@ class ResultadoActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        /*// Obtener una referencia al botón
-        val buttonPlayAgain = findViewById<Button>(R.id.buttonPlayAgain)*/
 
-        // Configurar el OnClickListener
-       /* buttonPlayAgain.setOnClickListener {
-            // Aquí dentro puedes navegar a otro fragmento
-            val nextFragment = FirstFragment() // Reemplaza TuNuevoFragmento con el nombre de tu fragmento
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.FirstFragment, nextFragment)
-                .commit()
-        }*/
-        // Configurar el OnClickListener para el botón de "Salir"
-        /*val buttonExit = findViewById<Button>(R.id.buttonExit)
-        buttonExit.setOnClickListener {
-            // Cerrar la actividad actual y todas las actividades asociadas a ella
-            finishAffinity()
-        }*/
         // Obtener referencias a los TextView
         val textViewHeader1 = findViewById<TextView>(R.id.textViewHeader1)
         val textViewHeader2 = findViewById<TextView>(R.id.textViewHeader2)
 
-// Establecer el texto de los TextView
+        // Establecer el texto de los TextView
         textViewHeader1.text = "Nombre"
         textViewHeader2.text = "Puntaje"
 
@@ -69,63 +58,70 @@ class ResultadoActivity : AppCompatActivity() {
 
     private fun updateView() {
         GlobalScope.launch {
-            val allPersons = personDao.getAllPersons() // Obtener todos los registros de la base de datos
-            val sortedPersons = allPersons.sortedByDescending { it.score } // Ordenar la lista de personas por puntaje de mayor a menor
+            val sortedPersons = withContext(Dispatchers.IO) {
+                personDao.getAllPersons().sortedByDescending { it.score }
+            }
 
             runOnUiThread {
                 val tableLayout = findViewById<TableLayout>(R.id.tableLayout)
-                tableLayout.removeAllViews() // Limpiar todas las filas existentes antes de agregar nuevas filas
+                tableLayout.removeAllViews()
 
-                // Agregar cabecera de la tabla
-                val headerRow = TableRow(this@ResultadoActivity)
-                val headerNames = listOf("Nombre", "Puntaje", "Dificultad")
-                headerNames.forEach { headerName ->
-                    val textView = TextView(this@ResultadoActivity).apply {
-                        text = headerName
-                        layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply {
-                            weight = 10f
-                            marginStart = 16 // Ajusta el margen izquierdo según sea necesario
-                            marginEnd = 16 // Ajusta el margen derecho según sea necesario
-                            width = 0 // Establece el ancho en 0 para que el weight funcione correctamente
-                        }
-                    }
-                    headerRow.addView(textView)
-                }
-                tableLayout.addView(headerRow)
-
-                // Agregar datos de los jugadores
-                sortedPersons.forEach { person ->
-                    val tableRow = TableRow(this@ResultadoActivity)
-
-                    val nameTextView = TextView(this@ResultadoActivity).apply {
-                        text = person.name
-                        layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply {
-                            weight = 10f
-                            marginStart = 50 // Ajusta el margen izquierdo según sea necesario
-                            marginEnd = 16 // Ajusta el margen derecho según sea necesario
-                            width = 50 // Establece el ancho en 0 para que el weight funcione correctamente
-                        }
-                    }
-                    val scoreTextView = TextView(this@ResultadoActivity).apply {
-                        text = person.score.toString()
-                        layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply {
-                            weight = 1f
-                        }
-                    }
-                    val difficultyTextView = TextView(this@ResultadoActivity).apply {
-                        text = person.dificil
-                        layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply {
-                            weight = 1f
-                        }
-                    }
-
-                    tableRow.addView(nameTextView)
-                    tableRow.addView(scoreTextView)
-                    tableRow.addView(difficultyTextView)
-
-                    tableLayout.addView(tableRow)
-                }
+                addTableHeader(tableLayout)
+                addPlayersData(tableLayout, sortedPersons)
             }
+        }
+    }
+
+    private fun addTableHeader(tableLayout: TableLayout) {
+        val headerRow = TableRow(this@ResultadoActivity)
+        val headerNames = listOf("Nombre", "Puntaje", "Dificultad")
+        headerNames.forEach { headerName ->
+            val textView = createTextView(headerName, true)
+            headerRow.addView(textView)
+        }
+        tableLayout.addView(headerRow)
+    }
+
+    private fun addPlayersData(tableLayout: TableLayout, sortedPersons: List<Person>) {
+        var alternateColor = true
+        sortedPersons.forEach { person ->
+            val tableRow = TableRow(this@ResultadoActivity)
+            if (alternateColor) {
+                tableRow.setBackgroundColor(Color.parseColor("#ECEFF1")) // Cambia el color de fondo de la fila
+            }
+            val nameTextView = createTextView(person.name, false, alternateColor)
+            val scoreTextView = createTextView(person.score.toString(), false, alternateColor)
+            val difficultyTextView = createTextView(person.dificil, false, alternateColor)
+
+            tableRow.addView(nameTextView)
+            tableRow.addView(scoreTextView)
+            tableRow.addView(difficultyTextView)
+
+            tableLayout.addView(tableRow)
+            alternateColor = !alternateColor
+        }
+    }
+
+    private fun createTextView(text: String, isHeader: Boolean = false, alternateColor: Boolean = false): TextView {
+        return TextView(this@ResultadoActivity).apply {
+            this.text = text
+            layoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+            ).apply {
+                weight = 1f
+                marginStart = 16
+                marginEnd = 16
+                width = 0
+            }
+            gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
+            if (isHeader) {
+                setTypeface(null, Typeface.BOLD)
+            }
+            if (alternateColor) {
+                setBackgroundColor(Color.parseColor("#F5F5F5")) // Cambia el color de fondo de la celda
+            }
+            setPadding(10, 20, 10, 20) // Ajusta el relleno
         }
     }
 
@@ -141,7 +137,6 @@ class ResultadoActivity : AppCompatActivity() {
             }
         }
     }
-
 
 
     private fun showToast(message: String) {
